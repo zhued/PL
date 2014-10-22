@@ -32,7 +32,7 @@ Consider the small-step orperational semantics for JavaScripty schown in Figures
 ### 3. Short circuit Evaluation
 **a** Concept: Give an example that illustrates the usefulness of short circuit evaluation. Explain your example.
 
-**b** JavaScripty. Consider the small step
+**b** JavaScripty. Consider the small step BLAH BLAH BLAH
 
 ### Scala exercices
 See Lab2.scala
