@@ -39,8 +39,15 @@ Consider the small-step orperational semantics for JavaScripty schown in Figures
 **a.** Concept: Give an example that illustrates the usefulness of short circuit evaluation. Explain your example.
 An example of short circuit being useful is when once we evaluate a value of one expression we don't have to evaluate any other expressions because we know what the end evaluation will be. Below is an example of short circuiting being benificial:
 
+ ```
+	e -> eprime
+	-----------
+
+ ```
+
 
 **b.** JavaScripty. Consider the small-step operational semantics for JAVASCRIPTY shown in Figures 7, 8, and 9. Does e1&&e2 short circuit? Explain.
+Yes, e1&&e2 will short circuit because in the DoAndFalse judgement, when toBoolean(v1) is false, then the expression v1&&e2 will evaluate to just v1 and will not even evaluate e2. This is possible because the behavior of the '&&' will return a false immediately once one of the values is false, so if v1 is false, we can automatically evaluate v1&&e2 to v1 which is false.
 
 ### Scala exercices
 See Lab2.scala
