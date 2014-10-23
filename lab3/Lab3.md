@@ -22,8 +22,12 @@ Static Scoping:
 	print(addTen);
 	print(global);
  ```
-	If this program was ran on with a dynamically typed language, then 'global' would print 0 and 'addTen' would print 20. This is because the scope of the function callFunc will be within the same scope in the function runFunc, where the var global in runFunc is changed from the global outside its scope that was set to 0 to the value 10. So then the global variable in callFunc will reference the value of 10 from runFunc, so addTen will be evaluated to 10+10 which will be 20.
-	When this program is ran under static scoping, even though the 'global' in runFunc gets changed to 10 from 0, when callFunc() gets called, the scope within the callFunc is separtate from the scope of runFunc, thus the 'global' in runFunc is bound to the outside scope at the very beginning of the value 0. Thus global in this case would print 0 and addTen would print 10.
+
+If this program was ran on with a dynamically typed language, then 'global' would print 0 and 'addTen' would print 20. This is because the scope of the function callFunc will be within the same scope in the function runFunc, where the var global in runFunc is changed from the global outside its scope that was set to 0 to the value 10. So then the global variable in callFunc will reference the value of 10 from runFunc, so addTen will be evaluated to 10+10 which will be 20.
+
+When this program is ran under static scoping, even though the 'global' in runFunc gets changed to 10 from 0, when callFunc() gets called, the scope within the callFunc is separtate from the scope of runFunc, thus the 'global' in runFunc is bound to the outside scope at the very beginning of the value 0. Thus global in this case would print 0 and addTen would print 10.
+
+
 
 ### 2. JavaScripty Interpereter: Substitution and Evaluation Order
 **c.** Explain whether the evaluation order is deterministic as specified by judgement form e -> eprime.
@@ -33,6 +37,8 @@ Consider the small-step orperational semantics for JavaScripty schown in Figures
 
 ### 4. Short-Circuit Evaluation
 **a.** Concept: Give an example that illustrates the usefulness of short circuit evaluation. Explain your example.
+An example of short circuit being useful is when once we evaluate a value of one expression we don't have to evaluate any other expressions because we know what the end evaluation will be. Below is an example of short circuiting being benificial:
+
 
 **b.** JavaScripty. Consider the small-step operational semantics for JAVASCRIPTY shown in Figures 7, 8, and 9. Does e1&&e2 short circuit? Explain.
 
