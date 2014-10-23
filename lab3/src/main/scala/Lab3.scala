@@ -303,7 +303,7 @@ object Lab3 extends jsy.util.JsyApplication {
       //DoCall & DoCallRec
       case Call(Function(name, x, eprime), v2) if (isValue(v2)) => Function(name, x, eprime) match {
         //DoCallRec
-        case Function(Some(f), x, eprime) => substitute(substitute(eprime, v2, x), Function(Some(f), x, eprime), f)
+        case Function(Some(f), x, eprime) => substitute( substitute(eprime, v2, x), Function(Some(f), x, eprime), f)
         //DoCall
         case Function(name, x, eprime) => substitute(eprime, v2, x)
       }
