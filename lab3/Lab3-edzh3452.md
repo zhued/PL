@@ -64,7 +64,7 @@ An example of short circuit being useful is when once we evaluate a value of one
 Yes, e1&&e2 will short circuit because in the DoAndFalse judgement, when toBoolean(v1) is false, then the expression v1&&e2 will evaluate to just v1 and will not even need to evaluate e2. This is possible because the behavior of the '&&' will return a false immediately once one of the values is false, so if v1 is false, we can automatically evaluate v1&&e2 to v1 which is false.
 
 ### Scala exercices
-See Lab2.scala
+See Lab3.scala
 
 To run the auto-grader:
 
