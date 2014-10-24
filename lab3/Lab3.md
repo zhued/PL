@@ -31,12 +31,15 @@ When this program is ran under static scoping, even though the 'global' in runFu
 
 ### 2. JavaScripty Interpereter: Substitution and Evaluation Order
 **c.** Explain whether the evaluation order is deterministic as specified by judgement form e -> eprime.
+
 The evaluation order is deterministic. The evaluation order is e1 then e2. We require e1 and e2 to be values, and if they aren't, we evaluate e1 to a value v1. And after e1 is a value, the search rules then calls on evaluating e2 to a value v2. Step(e1) is called before the interpreter check if e2 is a value, in the cases where neither of them are values.
 
 
 ### 3. Evaluation Order
 Consider the small-step orperational semantics for JavaScripty schown in Figures 7, 8, and 9. What is the evaluation order for e1 and e2? Explain. How do we change the rules optain the opposite evaluation order?
-The evaluation order for e1 and e2 is from left to right. 
+
+The evaluation order for e1 and e2 is from left to right.
+
 Until both e1 and e2 are values, we recurse search rules until they are reduced to values. SEARCHBINARY1 is used to make sure e1 reduces to a value, and will recursively do so until it is.
 
  ```
@@ -60,6 +63,7 @@ This order can be reversed if we insert a case that calls on e2 and evaluates it
 
 ### 4. Short-Circuit Evaluation
 **a.** Concept: Give an example that illustrates the usefulness of short circuit evaluation. Explain your example.
+
 An example of short circuit being useful is when once we evaluate a value of one expression we don't have to evaluate any other expressions because we know what the end evaluation will be. Below is an example of short circuiting being benificial:
 
  ```
@@ -70,6 +74,7 @@ An example of short circuit being useful is when once we evaluate a value of one
 
 
 **b.** JavaScripty. Consider the small-step operational semantics for JAVASCRIPTY shown in Figures 7, 8, and 9. Does e1&&e2 short circuit? Explain.
+
 Yes, e1&&e2 will short circuit because in the DoAndFalse judgement, when toBoolean(v1) is false, then the expression v1&&e2 will evaluate to just v1 and will not even evaluate e2. This is possible because the behavior of the '&&' will return a false immediately once one of the values is false, so if v1 is false, we can automatically evaluate v1&&e2 to v1 which is false.
 
 ### Scala exercices
