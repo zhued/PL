@@ -31,9 +31,32 @@ When this program is ran under static scoping, even though the 'global' in runFu
 
 ### 2. JavaScripty Interpereter: Substitution and Evaluation Order
 **c.** Explain whether the evaluation order is deterministic as specified by judgement form e -> eprime.
+The evaluation order is deterministic. The evaluation order is e1 then e2. We require e1 and e2 to be values, and if they aren't, we evaluate e1 to a value v1. And after e1 is a value, the search rules then calls on evaluating e2 to a value v2. Step(e1) is called before the interpreter check if e2 is a value, in the cases where neither of them are values.
+
 
 ### 3. Evaluation Order
 Consider the small-step orperational semantics for JavaScripty schown in Figures 7, 8, and 9. What is the evaluation order for e1 and e2? Explain. How do we change the rules optain the opposite evaluation order?
+The evaluation order for e1 and e2 is from left to right. 
+Until both e1 and e2 are values, we recurse search rules until they are reduced to values. SEARCHBINARY1 is used to make sure e1 reduces to a value, and will recursively do so until it is.
+
+ ```
+ e1 -> e1'
+ -----------------------
+ e1 bop e2 -> e1' bop e2
+ ``` 
+
+From the above function, after e1 evalutes to a value, SEARCHBINARYARITH2 can then be used to reduce e2.
+
+ ```
+ e2 -> e2'      bop +
+ -----------------------
+ v1 bop v2 -> v1 bop e2'
+ ``` 
+
+It is visible here that it is required for e1 to be evaluated to a value v1 before SEARCHBINARYARITH2 can even start, therefore we can conclude that the evaluation order is left to right, that is e1 must be evaluted to a value first before e2 can be evaluated.
+
+This order can be reversed if we insert a case that calls on e2 and evaluates it until it becomes a value before even evaluating e1. This will force e2 to be evaluated before e1, which is the exact opposite of what is given above.
+
 
 ### 4. Short-Circuit Evaluation
 **a.** Concept: Give an example that illustrates the usefulness of short circuit evaluation. Explain your example.
