@@ -4,9 +4,9 @@ object Lab4 extends jsy.util.JsyApplication {
   
   /*
    * CSCI 3155: Lab 4
-   * <Your Name>
+   * Edward Zhu
    * 
-   * Partner: <Your Partner's Name>
+   * Partner: Alex Campbell
    * Collaborators: <Any Collaborators>
    */
 
