@@ -167,6 +167,15 @@ object Lab3 extends jsy.util.JsyApplication {
         // If there is Some function name then store in env before running
         //   
         // None and some are constructors for option string
+
+        //evaluates a call of form e1, e2. e1 = function type & if not func type then evaluate, e2 = parameter
+        //make a call, recursive func: func name, parameter, and expression that's the body of the function.
+        //go into expression body, replace func names with expression body. 
+        //name of parameter (x) and extend env with e2. 
+        //extend env so the name of func maps to func body. 
+        //take that env (within it) so that x extends to whatever e2 is, which is the param
+        //call eval on the body of func.
+        //dynamic scoping: extension (x maps to e2)
         case Function(Some(x1), x2, eprime) => {
           val env1=extend(env, x1, eToVal(e1))
           eval(extend(env1, x2, eToVal(e2)), eprime)
@@ -184,6 +193,14 @@ object Lab3 extends jsy.util.JsyApplication {
     
 
   /* Small-Step Interpreter with Static Scoping */
+  //one small step, ex:constdecl...change expression
+  //small-step interpreter deterministic because
+  //each time you take a func, you simplify it
+  //each time you get a func, one case where it'll fall to: 
+  //pattern matching in interpreter, it'll fall under one case.
+  //since one case, and they're in a specific order, it's deterministic. 
+
+  //anything in the interpreter that can be reduced 
   
   def substitute(e: Expr, v: Expr, x: String): Expr = {
     require(isValue(v))
@@ -203,11 +220,18 @@ object Lab3 extends jsy.util.JsyApplication {
       case Binary(bop, e1, e2) => Binary(bop, subst(e1), subst(e2)) 
       
       // Stored values
+      // r = arguments
+      // f = expression
       case Function(name, r, f) => 
+        // if it has an argument (5) or name f(), then retun the function, else recusively substitute f until it is found out
         if (r == x || name == Some(x)) 
           Function(name, r, f) 
+        // 
         else 
           Function(name, r, subst(f))
+
+      // e1 will have to be stripped down to find a v1 for it
+      // 
       case ConstDecl(y, e1, e2) => ConstDecl(y, subst(e1), if (x == y) e2 else subst(e2))
       
       // Call/If, just subst all expressions
@@ -380,7 +404,7 @@ object Lab3 extends jsy.util.JsyApplication {
       println("Value: " + v)
     }
     v
-  } 
+  }
   
   // Convenience to pass in a jsy expression as a string.
   def evaluate(s: String): Expr = evaluate(jsy.lab3.Parser.parse(s))
