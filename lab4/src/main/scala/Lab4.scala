@@ -209,7 +209,8 @@ object Lab4 extends jsy.util.JsyApplication {
       case Call(e1, args) => typ(e1) match {
         case TFunction(params, tret) if (params.length == args.length) => {
           (params, args).zipped.foreach {
-            case ((x, t), ex) => if (t != typ(ex)) err(t, ex)
+            //for every (params, args), the t is not the type of e of n, then return error, else tret
+            case ((x, t), en) => if (t != typ(en)) err(t, en)
           };
           tret
         }
@@ -267,14 +268,27 @@ object Lab4 extends jsy.util.JsyApplication {
       case If(e1, e2, e3) => If(subst(e1), subst(e2), subst(e3))
       case Var(y) => if (x == y) v else e
       case ConstDecl(y, e1, e2) => ConstDecl(y, subst(e1), if (x == y) e2 else subst(e2))
-      case Function(p, params, tann, e1) =>
-        throw new UnsupportedOperationException
+      // Did these functions below
+      case Function(p, params, tann, e1) => p match{
+          case(None)=> 
+            if (params.forall{case(n,_) => (x != n)}){
+              Function(p, params, tann, subst(e1))
+            } else {
+              Function(p, params, tann, e1)
+            }
+          case Some(a) => 
+            if (params.forall{case(n,_) => (x != n)} && a!=x){
+              Function(p, params, tann, subst(e1))
+            } else {
+              Function(p, params, tann, e1)
+            }           
+        }
       case Call(e1, args) =>
-        throw new UnsupportedOperationException
+        Call(subst(e1), args map subst)
       case Obj(fields) =>
-        throw new UnsupportedOperationException
+        Obj(fields.mapValues((exp: Expr) => subst(exp)))
       case GetField(e1, f) =>
-        throw new UnsupportedOperationException
+        GetField(subst(e1), f)
     }
   }
   
@@ -289,29 +303,51 @@ object Lab4 extends jsy.util.JsyApplication {
       case Unary(Neg, N(n1)) => N(- n1)
       case Unary(Not, B(b1)) => B(! b1)
       case Binary(Seq, v1, e2) if isValue(v1) => e2
+
+      //DoArith
       case Binary(Plus, S(s1), S(s2)) => S(s1 + s2)
       case Binary(Plus, N(n1), N(n2)) => N(n1 + n2)
+      //Minus, Times, and Div on Numbers
+      case Binary(Minus, N(n1), N(n2)) => N(n1 - n2)
+      case Binary(Times, N(n1), N(n2)) => N(n1 * n2)
+      case Binary(Div, N(n1), N(n2)) => N(n1 / n2)
+
       case Binary(bop @ (Lt|Le|Gt|Ge), v1, v2) if isValue(v1) && isValue(v2) => B(inequalityVal(bop, v1, v2))
       case Binary(Eq, v1, v2) if isValue(v1) && isValue(v2) => B(v1 == v2)
       case Binary(Ne, v1, v2) if isValue(v1) && isValue(v2) => B(v1 != v2)
       case Binary(And, B(b1), e2) => if (b1) e2 else B(false)
       case Binary(Or, B(b1), e2) => if (b1) B(true) else e2
       case ConstDecl(x, v1, e2) if isValue(v1) => substitute(e2, v1, x)
+      
+      // Filled in call Function
+      // DoCall
       case Call(v1, args) if isValue(v1) && (args forall isValue) =>
         v1 match {
           case Function(p, params, _, e1) => {
             val e1p = (params, args).zipped.foldRight(e1){
-              throw new UnsupportedOperationException
+              (vars,acc)=> vars match{
+                case((name,_),value) => substitute(acc,value,name)
+              }
             }
             p match {
-              case None => throw new UnsupportedOperationException
-              case Some(x1) => throw new UnsupportedOperationException
+              case None => e1p
+              case Some(x1) => substitute(e1p,v1,x1)
             }
           }
           case _ => throw new StuckError(e)
         }
       /*** Fill-in more cases here. ***/
-        
+
+        // DoIfTrue & DoIfFalse
+        case If(B(b1), e2, e3) => if (b1) e2 else e3
+
+        // DoGetField && SearchGetField
+        case GetField(Obj(fields), f) => fields.get(f) match {
+          case Some(e1) => e1 
+          case None => throw new StuckError(e)
+        }
+        case GetField(e1, f) => GetField(step(e1), f)
+
       /* Inductive Cases: Search Rules */
       case Print(e1) => Print(step(e1))
       case Unary(uop, e1) => Unary(uop, step(e1))
@@ -320,6 +356,8 @@ object Lab4 extends jsy.util.JsyApplication {
       case If(e1, e2, e3) => If(step(e1), e2, e3)
       case ConstDecl(x, e1, e2) => ConstDecl(x, step(e1), e2)
       /*** Fill-in more cases here. ***/
+      case Call(v1,args) if isValue(v1)=> Call(v1, mapFirst(stepIfNotValue)(args))  
+      case Call(e1,e2)=> Call(step(e1),e2)
       
       /* Everything else is a stuck error. Should not happen if e is well-typed. */
       case _ => throw StuckError(e)
