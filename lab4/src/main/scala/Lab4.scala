@@ -43,7 +43,7 @@ object Lab4 extends jsy.util.JsyApplication {
     // else keep original list.
     case h1 :: (t1 @ (h2 :: _)) => if (h1==h2) compressRec(t1) else h1 :: compressRec(t1)
   }
-  
+  //fold right 
   def compressFold[A](l: List[A]): List[A] = l.foldRight(Nil: List[A]){
     (h, acc) => acc match { 
       case (h1 :: h2) if (h == h1) => acc 
@@ -66,7 +66,7 @@ object Lab4 extends jsy.util.JsyApplication {
       case Empty => Node(Empty, n, Empty)
       case Node(l, d, r) => if (n < d) Node(l insert n, d, r) else Node(l, d, r insert n)
     } 
-    
+    //fold left
     def foldLeft[A](z: A)(f: (A, Int) => A): A = {
       def loop(acc: A, t: Tree): A = t match {
         case Empty => acc
@@ -193,7 +193,7 @@ object Lab4 extends jsy.util.JsyApplication {
         }
         // Bind to env2 an environment that extends env1 with bindings for params.
         val env2 = params.foldLeft(env1) {
-          case(acc, (xName, tValue)) => acc + (xName -> tValue)
+          case(acc, (xName, xValue)) => acc + (xName -> xValue)
         }
         // Match on whether the return type is specified.
         tann match {
@@ -356,6 +356,7 @@ object Lab4 extends jsy.util.JsyApplication {
       case If(e1, e2, e3) => If(step(e1), e2, e3)
       case ConstDecl(x, e1, e2) => ConstDecl(x, step(e1), e2)
       /*** Fill-in more cases here. ***/
+      //SearchCall 1 and 2
       case Call(v1,args) if isValue(v1)=> Call(v1, mapFirst(stepIfNotValue)(args))  
       case Call(e1,e2)=> Call(step(e1),e2)
       

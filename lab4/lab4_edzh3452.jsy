@@ -1,8 +1,2 @@
-/*
- * This test case demonstrates correct operation of Plus
- *
- * Big-step expected results: 7.5
- * Small-step expected results: 7.5
- */
-
-4.8 + 2.3 
+const f = {e: 12, g: function(x: number) { return x + 2 } }; 
+f.g(f.e);
