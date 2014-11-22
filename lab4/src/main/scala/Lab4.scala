@@ -191,7 +191,7 @@ object Lab4 extends jsy.util.JsyApplication {
           case (None, _) => env
           case _ => err(TUndefined, e1)
         }
-        // Bind to env2 an environment that extends env1 with bindings for params.
+        // Bind to env2 an environment that extends env1 with bindings for params and arguments.
         val env2 = params.foldLeft(env1) {
           case(acc, (xName, xValue)) => acc + (xName -> xValue)
         }
@@ -207,7 +207,8 @@ object Lab4 extends jsy.util.JsyApplication {
 
       //TypeCall
       case Call(e1, args) => typ(e1) match {
-        case TFunction(params, tret) if (params.length == args.length) => {
+        case TFunction(params, tret) => {
+          //parameters are like function(a:string, b:int) and the arguments are passed in, the arguments must match the parameter type.
           (params, args).zipped.foreach {
             //for every (params, args), the t is not the type of e of n, then return error, else tret
             case ((x, t), en) => if (t != typ(en)) err(t, en)
@@ -269,6 +270,7 @@ object Lab4 extends jsy.util.JsyApplication {
       case Var(y) => if (x == y) v else e
       case ConstDecl(y, e1, e2) => ConstDecl(y, subst(e1), if (x == y) e2 else subst(e2))
       // Did these functions below
+      // If free variable, stubstatute, otherwise you dont have to
       case Function(p, params, tann, e1) => p match{
           case(None)=> 
             if (params.forall{case(n,_) => (x != n)}){
@@ -287,6 +289,7 @@ object Lab4 extends jsy.util.JsyApplication {
         Call(subst(e1), args map subst)
       case Obj(fields) =>
         Obj(fields.mapValues((exp: Expr) => subst(exp)))
+      //if a free variable, subst
       case GetField(e1, f) =>
         GetField(subst(e1), f)
     }
@@ -321,16 +324,20 @@ object Lab4 extends jsy.util.JsyApplication {
       
       // Filled in call Function
       // DoCall
+      // v1 is a function
       case Call(v1, args) if isValue(v1) && (args forall isValue) =>
         v1 match {
           case Function(p, params, _, e1) => {
+            //substutiting args for params
             val e1p = (params, args).zipped.foldRight(e1){
               (vars,acc)=> vars match{
                 case((name,_),value) => substitute(acc,value,name)
               }
             }
             p match {
+
               case None => e1p
+              //value is a function, and we are substatuting the actual function for that name
               case Some(x1) => substitute(e1p,v1,x1)
             }
           }
@@ -342,6 +349,7 @@ object Lab4 extends jsy.util.JsyApplication {
         case If(B(b1), e2, e3) => if (b1) e2 else e3
 
         // DoGetField && SearchGetField
+        //get returns value of it
         case GetField(Obj(fields), f) => fields.get(f) match {
           case Some(e1) => e1 
           case None => throw new StuckError(e)
