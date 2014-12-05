@@ -6,7 +6,7 @@ object Lab5 extends jsy.util.JsyApplication {
    * CSCI 3155: Lab 5
    * Edward Zhu
    * 
-   * Partner: Louis Badouusou
+   * Partner: Louis Badouuo
    * Collaborators: <Any Collaborators>
    */
 
@@ -48,14 +48,23 @@ object Lab5 extends jsy.util.JsyApplication {
   def castOk(t1: Typ, t2: Typ): Boolean = (t1, t2) match {
     case (TNull, TObj(_)) => true
     case (_, _) if (t1 == t2) => true
-    case (TObj(fields1), TObj(fields2)) => throw new UnsupportedOperationException
+    // Cast every field with foldleft and if they have castable types in each field
+    // if keys are castable, return acc as true and recursively call caskok
+    // if there is one false, it will return false, until all are true then it will
+    // return true
+    case (TObj(fields1), TObj(fields2)) => fields1.keys.foldLeft(true){
+        (acc, key) => (fields1.get(key), fields2.get(key)) match {
+          case (f1Typ, f2Typ) if(f1Typ == None || f2Typ == None) => acc && true 
+          case (Some(f1Typ), Some(f2Typ)) => acc && castOk(f1Typ, f2Typ)
+        }
+      }
     case (TInterface(tvar, t1p), _) => castOk(typSubstitute(t1p, t1, tvar), t2)
     case (_, TInterface(tvar, t2p)) => castOk(t1, typSubstitute(t2p, t2, tvar))
     case _ => false
   }
   
   /*** Type Inference ***/
-  
+
   def hasFunctionTyp(t: Typ): Boolean = t match {
     case TFunction(_, _) => true
     case TObj(fields) if (fields exists { case (_, t) => hasFunctionTyp(t) }) => true
@@ -178,7 +187,37 @@ object Lab5 extends jsy.util.JsyApplication {
       }
       
       /*** Fill-in more cases here. ***/
-        
+      case Null => TNull
+      // seeing if current value can be casted onto a certain type t
+      // mutation: 1 to true is NOT doable, but high and 1 is mutable
+      // castable: casting type 1 int to type true bool is DOABLE 
+      case Unary(Cast(t),e1) => if (castOk(typ(e1),t) && (t != TNull)) t else err(typ(e1),e1) 
+      // TypeDecl
+      // var x = 1 can be an int or a bool
+      // it will put into the mutibility class of x, 1 = int first
+      // then we recurse with e2
+      case Decl(mut,x,e1,e2) => typeInfer(env + (x -> (mut,typ(e1))),e2)
+      // TypeAssignVar & TypeAssignField
+      // var x = 5
+      // var x needs to of some T, 5 is already of type int
+      // therefore because 5 mapped to int, we can map x to int
+      // Field:
+      // Every var in the object is some type
+      // if we call the object then the exp type
+      // Alex.age = 18
+      // e1.f = e2      |||   18 is int, therefore Alex.age = int
+      case Assign(e1,e2) => e1 match {
+        case Var(x) => env.get(x) match {
+          case Some((MVar, t)) => 
+            if (t == typ(e2)) typeInfer(env + (x->(MVar, typ(e2))), e2) 
+            else err(t, e2)
+          case Some((MConst, t)) => err(t, e2)
+          case _ => typeInfer(env + (x -> (MVar, typ(e2))), e2)
+        }
+        case GetField(x1, f) => typeInfer(env + (f -> (MConst, typ(e1))), e2)
+        case _ => err(typ(e1),e2)
+      }
+
       /* Should not match: non-source expressions or should have been removed */
       case A(_) | Unary(Deref, _) | InterfaceDecl(_, _, _) => throw new IllegalArgumentException("Gremlins: Encountered unexpected expression %s.".format(e))
     }
