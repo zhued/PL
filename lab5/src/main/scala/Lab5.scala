@@ -306,9 +306,7 @@ object Lab5 extends jsy.util.JsyApplication {
           Function(None, Right((mode, s, t)), retty, e1Sub)
           
       }
-
-
-
+      
       case Call(e1, args) => Call(subst(e1), args map subst)
       case Obj(fields) => Obj(fields map { case (fi,ei) => (fi, subst(ei)) })
       case GetField(e1, f) => GetField(subst(e1), f)

@@ -143,6 +143,7 @@ object ast {
     def get(key: A): Option[Expr] = map.get(key)
     def +(kv: (A, Expr)): Mem = new Mem(map + kv, nextAddr)
     def contains(key: A): Boolean = map.contains(key)
+    def isEmpty = map.isEmpty
     
     private def alloc(v: Expr): (Mem, A) = {
       val fresha = A(nextAddr)

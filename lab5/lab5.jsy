@@ -1,0 +1,23 @@
+interface Person {Name:string;Age:number;cityName:string;stateName:string}
+
+const Person = function(sName:string,snumber:number,cName:string,stName:string){
+       return {Name:sName,Age:snumber,cityName:cName,stateName:stName}
+};
+
+var Louis = Person("Louis Baduouo", 22,"Boulder", "Colorado")
+console.log(Louis.Age)
+console.log(Louis.Name)
+console.log(Louis.stateName + "," + Louis.cityName)
+
+var Edward = Person("Edward Zhu", 20, "Fort Collins", "Colorado")
+console.log(Edward.Age)
+console.log(Edward.Name)
+console.log(Edward.stateName + "," + Edward.cityName)
+
+Edward.Name = "SOMEOTHERGUY"
+Edward.Age = 4
+Edward.cityName = "Los Aangeles"
+Edward.stateName = "California"
+console.log(Edward.Age)
+console.log(Edward.Name)
+console.log(Edward.stateName + "," + Edward.cityName)
