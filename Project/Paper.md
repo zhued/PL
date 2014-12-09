@@ -1,11 +1,11 @@
-The Multiprocessing Era of Python
+Birth of the Multiprocessing in Python
 =================================
 Group Members: Edward Zhu, Steven Tang, John Zavidniak
 
 Introduction:
 -------------
 
-Python did not originally include the multiprocessing package in it’s standard library. Before the implementation of the package, the default python interpreter was designed to be simplistic with a thread safe mechanism known as GIL (Global Interpreter Lock). To prevent conflicts between threads, the lock only enabled single statement executions (single threading). With the inclusion of the “multiprocessing” package in version 2.6, previously named pyProcessing, it allowed users to spawning processes using an API very similar to the threading module. This package mimics the threading module functionality to provide a process-based approach to threaded programming. This allows end-users to run multiple tasks with either local and remote concurrency, which effectively side-steps the global interpreter lock.
+Python did not originally include the multiprocessing package in it’s standard library. Before the implementation of the package, the default python interpreter was designed to be simplistic with a thread safe mechanism known as GIL (Global Interpreter Lock). To prevent conflicts between threads, the lock only enabled single statement executions (single threading). With the inclusion of the “multiprocessing” package in version 2.6, previously named pyProcessing, it allowed users to spawn processes using an API very similar to the threading module. This package mimics the threading module functionality to provide a process-based approach to threaded programming. This allows end-users to run multiple tasks with either local and remote concurrency, which effectively side-steps the global interpreter lock.
 
 MultiThreading vs Multiprocessing:
 ----------------------------------
@@ -17,7 +17,7 @@ What is the purpose behind utilizing the multiprocessing module in python and ho
 
 Basic Classes:
 --------------
-The multiprocessing package comes with many built-in options for creating a parallel application. The three most basic (and safest to use) are the Process, Queue and Lock classes. 
+The multiprocessing package comes with many built-in options for creating a parallel application. The three basic (and safe to use) are the Process, Queue and Pool classes. 
 
 The 'Process' class:
 --------------------
@@ -98,7 +98,7 @@ As seen in this example, a function named cube is defined which takes a number a
 
 General Drawbacks:
 ------------------
-Even though the functionalities of the multiprocessing package can be useful, there are some drawbacks when using it. Minor synchronization issues aside, sharing data by messaging requires programmers to make copies of everything that they’d like to share. For example, a parent process sends data to each child process. In this scenario, copying the data over isn’t an expensive operation, but retrieving the results from it is. Each child is required to send back the contents of the items that were updated. If we have quite a bit of information and only a few processes, the result could be quite substantial (in terms of memory usage of course). Unfortunately, this will hinder performance tremendously since copying over data from a child process to the parent process multiple times will not help in speeding up the execution of a program. However, there is a workaround for this limitation. We can utilize the two state sharing methods available in multiprocessing: shared memory and server processing. Shared memory uses Value and Array classes. An update to any instance of these two objects will immediately be visible to any other process that can access the objects. Since all the processes can access the shared memory location much like regular working memory, it allows multiple programs to communicate among each other without creating redundant copies of data. Server processes utilizes Manager classes. The object holds Python objects and allows processes to manipulate them by using proxies. The manager objects are more flexible than value and array objects because they can support arbitrary object types. Server processes are, however, slower than shared memory.
+Even though the functionalities of the multiprocessing package can be useful, there are some drawbacks when using it. Minor synchronization issues aside, sharing data by messaging requires programmers to make copies of everything that they’d like to share. For example, a parent process sends data to each child process. In this scenario, copying the data over isn’t an expensive operation, but retrieving the results from it is. Each child is required to send back the contents of the items that were updated. If we have quite a bit of information and only a few processes, the result could be quite substantial (in terms of memory usage of course). Unfortunately, this will hinder performance tremendously since copying over data from a child process to the parent process multiple times will not help in speeding up the execution of a program. However, there is a workaround for this limitation. We can utilize the two state sharing methods available in multiprocessing: shared memory and server processing. Shared memory uses Value and Array classes. An update to any instance of these two objects will immediately be visible to any other process that can access the objects. Since all the processes can access the shared memory location much like regular working memory, it allows multiple programs to communicate among each other without creating redundant copies of data. Server processes utilizes Manager classes. The object holds Python objects and allows processes to manipulate them by using proxies. The manager objects are more flexible than value and array objects because they can support arbitrary object types. Server processes are, however, slower than shared memory. There are also open issues by the developer, as there is no remote connection capabilities. If users will need to enable the remote security mechanisms for classes they want to run multiprocessing on. Also some APIs such as qsize(), task_done(), and join() have not been added yet.
 
 OS Restrictions:
 ----------------
