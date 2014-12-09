@@ -27,11 +27,22 @@ MultiThreading vs. MultiProcessing P2
 * No memory shared, so no race conditions.
 
 
+Basics of Multprocessing
+========================
+* Usage or two or more central processing units within a single system's systems
+* Parallel execution of multiple processors.
+
+
 Why Use Multiprocessing
 =======================
-* Parallel execution of multiple processors.
 * Improves performance.
 * Running multiple tasks at the same time.
+
+
+Benchmark Results
+=================
+* Results how increase of up to three times speed in programs
+* Speed really shows as processes/iterations increase.
 
 
 Basic Classes in Package
