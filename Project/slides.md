@@ -48,7 +48,7 @@ Benchmark Results
 Basic Classes in Package
 ========================
 * Comes with many built in options for creating a parallel application.
-* Process, Queue, Lock Classes.
+* Process, Queue, Pool Classes.
 
 
 Process Class
