@@ -41,7 +41,7 @@ Why Use Multiprocessing
 
 Benchmark Results
 =================
-* Results how increase of up to three times speed in programs
+* Results show an increase of up to three times speed in programs
 * Speed really shows as processes/iterations increase.
 
 
