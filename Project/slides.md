@@ -12,7 +12,7 @@ Python before MultiProcessing
 Python's MultiProcessing Package
 ================================
 * MultiProcessing introduced in version 2.6.
-* Able to run multiple tasks w/ either local or remove concurrency, side-steping the global interpreter lock.
+* Able to run multiple tasks w/ either local or remote concurrency, side-steping the global interpreter lock.
 
 
 MultiThreading vs. MultiProcessing P1
