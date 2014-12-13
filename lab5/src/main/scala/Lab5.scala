@@ -173,7 +173,7 @@ object Lab5 extends jsy.util.JsyApplication {
           // p._2 is tuple with mutibility with type
           // m = parameter
           // p = tuple of mutibility and and type
-          // assuming everything is const
+          // assuming everything is constd
           case Left(params) => env1 ++ params.foldLeft(Map[String,(Mutability,Typ)]())((m,p) => {
             m + (p._1 -> (MConst,p._2))
           })
@@ -368,7 +368,12 @@ object Lab5 extends jsy.util.JsyApplication {
           case _ => throw StuckError(e)
         }  
         )
-        
+      // pass by name = evaluate inside 
+      // pass by value = already evaluated outside
+      // call by name = value changes everytime called
+      // call by value = value computed once
+      // ref pass in the actually value
+      // value passes in pointer
       case Call(v1, args) if isValue(v1) =>
         def substfun(e1: Expr, p: Option[String]): Expr = p match {
           case None => e1
